@@ -12,11 +12,12 @@ import (
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
-// SmartContract provides functions for managing a car
+// SmartContract  fornece funções para gerenciar um hello-world
 type SmartContract struct {
 	contractapi.Contract
 }
 
+//Struct que estabelece um ativo
 type Oi struct {
 	Saudacao   string `json:"saudacao"`
 	Despedida  string `json:"despedida"`
@@ -24,7 +25,7 @@ type Oi struct {
 	Pessoa string `json:"pessoa"`
 	
 }
-// QueryResult structure used for handling result of query
+// Estrutura QueryResult usada para lidar com o resultado da consulta
 type QueryResult struct {
 	Key    string `json:"Key"`
 	Record *Oi

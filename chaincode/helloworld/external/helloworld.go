@@ -38,7 +38,7 @@ type Oi struct {
 	Pessoa string `json:"pessoa"`
 	
 }
-// QueryResult structure used for handling result of query
+// Estrutura QueryResult usada para lidar com o resultado da consulta
 type QueryResult struct {
 	Key    string `json:"Key"`
 	Record *Oi

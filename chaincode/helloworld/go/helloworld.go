@@ -8,10 +8,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
-
+	//"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
+
+/*
+type ServerConfig struct {
+	CCID    string
+	Address string
+}
+
+*/
 // SmartContract  fornece funções para gerenciar um hello-world
 type SmartContract struct {
 	contractapi.Contract
@@ -31,7 +39,7 @@ type QueryResult struct {
 	Record *Oi
 }
 
-// InitLedger adds a base set of cars to the ledger
+// InitLedger adds a base set of Oi's to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	ois := []Oi{
 		Oi{Saudacao: "Bom dia", Despedida: "Tchau", Oidenovo: "De novo?", Pessoa: "Marcola"},
@@ -58,36 +66,36 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 	return nil
 }
 
-// CreateCar adds a new car to the world state with given details
-func (s *SmartContract) CreateCar(ctx contractapi.TransactionContextInterface, carNumber string, make string, model string, colour string, owner string) error {
-	car := Car{
-		Make:   make,
-		Model:  model,
-		Colour: colour,
-		Owner:  owner,
+// Criar Oi adiciona uma nova Oi ao estado mundial com detalhes fornecidos
+func (s *SmartContract) CreateOi(ctx contractapi.TransactionContextInterface, oiNumber string, Saudacao string, Despedida string, Oidenovo string, Pessoa string) error {
+	Oi := Oi{
+		Saudacao:   saudacao,
+		Despedida:  despedida,
+		Oidenovo: oidenovo,
+		Pessoa:  pessoa,
 	}
 
-	carAsBytes, _ := json.Marshal(car)
+	oiAsBytes, _ := json.Marshal(Oi)
 
-	return ctx.GetStub().PutState(carNumber, carAsBytes)
+	return ctx.GetStub().PutState(oiNumber, oiAsBytes)
 }
 
-// QueryCar returns the car stored in the world state with given id
-func (s *SmartContract) QueryCar(ctx contractapi.TransactionContextInterface, carNumber string) (*Car, error) {
-	carAsBytes, err := ctx.GetStub().GetState(carNumber)
+// QueryOi returns the Oi stored in the world state with given id
+func (s *SmartContract) QueryOi(ctx contractapi.TransactionContextInterface, oiNumber string) (*Oi, error) {
+	oiAsBytes, err := ctx.GetStub().GetState(oiNumber)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to read from world state. %s", err.Error())
 	}
 
-	if carAsBytes == nil {
-		return nil, fmt.Errorf("%s does not exist", carNumber)
+	if oiAsBytes == nil {
+		return nil, fmt.Errorf("%s does not exist", oiNumber)
 	}
 
-	car := new(Car)
-	_ = json.Unmarshal(carAsBytes, car)
+	oi := new(Oi)
+	_ = json.Unmarshal(oiAsBytes, oi)
 
-	return car, nil
+	return oi, nil
 }
 
 // QueryAllCars returns all cars found in world state
@@ -111,41 +119,63 @@ func (s *SmartContract) QueryAllCars(ctx contractapi.TransactionContextInterface
 			return nil, err
 		}
 
-		car := new(Car)
-		_ = json.Unmarshal(queryResponse.Value, car)
+		oi := new(Oi)
+		_ = json.Unmarshal(queryResponse.Value, oi)
 
-		queryResult := QueryResult{Key: queryResponse.Key, Record: car}
+		queryResult := QueryResult{Key: queryResponse.Key, Record: oi}
 		results = append(results, queryResult)
 	}
 
 	return results, nil
 }
 
-// ChangeCarOwner updates the owner field of car with given id in world state
-func (s *SmartContract) ChangeCarOwner(ctx contractapi.TransactionContextInterface, carNumber string, newOwner string) error {
-	car, err := s.QueryCar(ctx, carNumber)
+// ChangeOiPessoa atualiza o campo Pessoa da Oi com id fornecido no estado mundial
+func (s *SmartContract) ChangeOiPessoa(ctx contractapi.TransactionContextInterface, oiNumber string, newPessoa string) error {
+	oi, err := s.QueryOi(ctx, oiNumber)
 
 	if err != nil {
 		return err
 	}
 
-	car.Owner = newOwner
+	oi.Pessoa = newPessoa
 
-	carAsBytes, _ := json.Marshal(car)
+	oiAsBytes, _ := json.Marshal(oi)
 
-	return ctx.GetStub().PutState(carNumber, carAsBytes)
+	return ctx.GetStub().PutState(oiNumber, oiAsBytes)
 }
 
+
 func main() {
+	// See chaincode.env.example
+	/*
+	config := ServerConfig{
+		CCID:    os.Getenv("CHAINCODE_ID"),
+		Address: os.Getenv("CHAINCODE_SERVER_ADDRESS"),
+	} */
 
 	chaincode, err := contractapi.NewChaincode(new(SmartContract))
 
 	if err != nil {
-		fmt.Printf("Error create fabcar chaincode: %s", err.Error())
+		fmt.Printf("Erro em criar helloworld chaincode: %s", err.Error())
 		return
 	}
+	/*
+	server := &shim.ChaincodeServer{
+		CCID:    config.CCID,
+		Address: config.Address,
+		CC:      chaincode,
+		TLSProps: shim.TLSProperties{
+			Disabled: true,
+		},
+	}
+
+	if err := server.Start(); err != nil {
+		fmt.Printf("Erro em estartar helloworld chaincode: %s", err.Error())
+	}
+
+	*/
 
 	if err := chaincode.Start(); err != nil {
-		fmt.Printf("Error starting fabcar chaincode: %s", err.Error())
+		fmt.Printf("Error starting helloworld chaincode: %s", err.Error())
 	}
 }

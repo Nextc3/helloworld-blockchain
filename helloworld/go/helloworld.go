@@ -53,7 +53,7 @@ func main() {
 	}
 	defer gw.Close()
 
-	network, err := gw.GetNetwork("canalurinario")
+	network, err := gw.GetNetwork("")
 	if err != nil {
 		fmt.Printf("Falhar em pegar a network: %s\n", err)
 		os.Exit(1)

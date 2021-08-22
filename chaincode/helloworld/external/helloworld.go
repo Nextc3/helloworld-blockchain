@@ -72,7 +72,7 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 }
 
 // Criar Oi adiciona uma nova Oi ao estado mundial com detalhes fornecidos
-func (s *SmartContract) CreateOi(ctx contractapi.TransactionContextInterface, oiNumber string, Saudacao string, Despedida string, Oidenovo string, Pessoa string) error {
+func (s *SmartContract) CreateOi(ctx contractapi.TransactionContextInterface, oiNumber string, saudacao string, despedida string, oidenovo string, pessoa string) error {
 	Oi := Oi{
 		Saudacao:   saudacao,
 		Despedida:  despedida,

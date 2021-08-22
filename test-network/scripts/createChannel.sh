@@ -44,7 +44,7 @@ createChannel() {
 		COUNTER=$(expr $COUNTER + 1)
 	done
 	cat log.txt
-	verifyResult $res "Channel creation failed"
+	verifyResult $res "Falha na criação do canal"
 }
 
 # joinChannel ORG

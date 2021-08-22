@@ -1,2 +1,2 @@
 #Consultar os ativos presentes no razão
-peer chaincode query -C canalurinario -n basic -c '{"Args":["GetAllAssets"]}'
+peer chaincode query -C mychannel -n basic -c '{"Args":["GetAllAssets"]}'

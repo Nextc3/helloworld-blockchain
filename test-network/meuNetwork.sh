@@ -324,7 +324,8 @@ function networkUp() {
     COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_COUCH}"
   fi
 
-  docker-compose ${COMPOSE_FILES} up -d 2>&1
+  DOCKER_SOCK="${DOCKER_SOCK}" docker-compose ${COMPOSE_FILES} up -d 2>&1
+
 
   docker ps -a
   if [ $? -ne 0 ]; then
@@ -371,7 +372,7 @@ function deployCC() {
 function networkDown() {
   # stop org3 containers also in addition to org1 and org2, in case we were running sample to add org3
   # stop org3 containers também além de org1 e org2, caso estivéssemos executando o sample para adicionar org3
-  docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA down --volumes --remove-orphans
+   DOCKER_SOCK=$DOCKER_SOCK docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA down --volumes --remove-orphans
   docker-compose -f $COMPOSE_FILE_COUCH_ORG3 -f $COMPOSE_FILE_ORG3 down --volumes --remove-orphans
   # Don't remove the generated artifacts -- note, the ledgers are always removed
   ## Não remova os artefatos gerados - observe, os livros-razão são sempre removidos
@@ -444,6 +445,10 @@ CC_VERSION="1.0"
 CC_SEQUENCE=1
 # default database
 DATABASE="leveldb"
+
+# Get docker sock path from environment variable
+SOCK="${DOCKER_HOST:-/var/run/docker.sock}"
+DOCKER_SOCK="${SOCK##unix://}"
 
 # Parse commandline args
 

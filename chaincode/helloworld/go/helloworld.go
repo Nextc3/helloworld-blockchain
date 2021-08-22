@@ -176,6 +176,6 @@ func main() {
 	*/
 
 	if err := chaincode.Start(); err != nil {
-		fmt.Printf("Error starting helloworld chaincode: %s", err.Error())
+		fmt.Printf("Erro em criar helloworld chaincode: %s", err.Error())
 	}
 }

@@ -44,7 +44,7 @@ type QueryResult struct {
 	Record *Oi
 }
 
-// InitLedger adds a base set of Ois to the ledger
+// InitLedger adds a base set of Oi's to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	ois := []Oi{
 		Oi{Saudacao: "Bom dia", Despedida: "Tchau", Oidenovo: "De novo?", Pessoa: "Marcola"},

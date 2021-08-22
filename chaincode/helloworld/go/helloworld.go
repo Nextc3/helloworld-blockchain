@@ -8,10 +8,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+
 	//"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
-
 
 /*
 type ServerConfig struct {
@@ -27,12 +27,12 @@ type SmartContract struct {
 
 //Struct que estabelece um ativo
 type Oi struct {
-	Saudacao   string `json:"saudacao"`
-	Despedida  string `json:"despedida"`
-	Oidenovo string `json:"oidenovo"`
-	Pessoa string `json:"pessoa"`
-	
+	Saudacao  string `json:"saudacao"`
+	Despedida string `json:"despedida"`
+	Oidenovo  string `json:"oidenovo"`
+	Pessoa    string `json:"pessoa"`
 }
+
 // Estrutura QueryResult usada para lidar com o resultado da consulta
 type QueryResult struct {
 	Key    string `json:"Key"`
@@ -69,10 +69,10 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 // Criar Oi adiciona uma nova Oi ao estado mundial com detalhes fornecidos
 func (s *SmartContract) CreateOi(ctx contractapi.TransactionContextInterface, oiNumber string, Saudacao string, Despedida string, Oidenovo string, Pessoa string) error {
 	Oi := Oi{
-		Saudacao:   saudacao,
-		Despedida:  despedida,
-		Oidenovo: oidenovo,
-		Pessoa:  pessoa,
+		Saudacao:  saudacao,
+		Despedida: despedida,
+		Oidenovo:  oidenovo,
+		Pessoa:    pessoa,
 	}
 
 	oiAsBytes, _ := json.Marshal(Oi)
@@ -98,8 +98,8 @@ func (s *SmartContract) QueryOi(ctx contractapi.TransactionContextInterface, oiN
 	return oi, nil
 }
 
-// QueryAllCars returns all cars found in world state
-func (s *SmartContract) QueryAllCars(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
+// QueryAllOis returns all Ois found in world state
+func (s *SmartContract) QueryAllOis(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
 	startKey := ""
 	endKey := ""
 
@@ -144,14 +144,13 @@ func (s *SmartContract) ChangeOiPessoa(ctx contractapi.TransactionContextInterfa
 	return ctx.GetStub().PutState(oiNumber, oiAsBytes)
 }
 
-
 func main() {
 	// See chaincode.env.example
 	/*
-	config := ServerConfig{
-		CCID:    os.Getenv("CHAINCODE_ID"),
-		Address: os.Getenv("CHAINCODE_SERVER_ADDRESS"),
-	} */
+		config := ServerConfig{
+			CCID:    os.Getenv("CHAINCODE_ID"),
+			Address: os.Getenv("CHAINCODE_SERVER_ADDRESS"),
+		} */
 
 	chaincode, err := contractapi.NewChaincode(new(SmartContract))
 
@@ -160,18 +159,18 @@ func main() {
 		return
 	}
 	/*
-	server := &shim.ChaincodeServer{
-		CCID:    config.CCID,
-		Address: config.Address,
-		CC:      chaincode,
-		TLSProps: shim.TLSProperties{
-			Disabled: true,
-		},
-	}
+		server := &shim.ChaincodeServer{
+			CCID:    config.CCID,
+			Address: config.Address,
+			CC:      chaincode,
+			TLSProps: shim.TLSProperties{
+				Disabled: true,
+			},
+		}
 
-	if err := server.Start(); err != nil {
-		fmt.Printf("Erro em estartar helloworld chaincode: %s", err.Error())
-	}
+		if err := server.Start(); err != nil {
+			fmt.Printf("Erro em estartar helloworld chaincode: %s", err.Error())
+		}
 
 	*/
 

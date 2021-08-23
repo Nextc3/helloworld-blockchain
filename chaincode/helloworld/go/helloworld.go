@@ -56,10 +56,11 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 
 	for i, oi := range ois {
 		oiAsBytes, _ := json.Marshal(oi)
+		//coloca um identificador nos OI's exemplo OI1, OI2, OI3
 		err := ctx.GetStub().PutState("OI"+strconv.Itoa(i), oiAsBytes)
 
 		if err != nil {
-			return fmt.Errorf("Falha ao colocar no estado mundial. %s", err.Error())
+			return fmt.Errorf("Falha ao colocar no estado mundial.(Colocar na ledger) %s", err.Error())
 		}
 	}
 

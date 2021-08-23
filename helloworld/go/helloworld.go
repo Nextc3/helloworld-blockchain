@@ -53,44 +53,56 @@ func main() {
 	}
 	defer gw.Close()
 
-	network, err := gw.GetNetwork("")
+	network, err := gw.GetNetwork("mychannel")
 	if err != nil {
 		fmt.Printf("Falhar em pegar a network: %s\n", err)
 		os.Exit(1)
 	}
+	
 
-	contract := network.GetContract("hellworld")
+	contract := network.GetContract("helloworld")
 
+
+	//mostrar o conteúdo da Ledger e pegar todos os OI's
 	result, err := contract.EvaluateTransaction("queryAllOis")
 	if err != nil {
 		fmt.Printf("Falha ao avaliar a transação: %s\n", err)
 		os.Exit(1)
 	}
 	fmt.Println(string(result))
+	/*
+	Oi := Oi{
+		Saudacao:  saudacao,
+		Despedida: despedida,
+		Oidenovo:  oidenovo,
+		Pessoa:    pessoa,
+	}
 
-	result, err = contract.SubmitTransaction("createOi", "Cheguei otário", "Tô indo fdp", "Polo", "Mary")
+	*/
+
+	result, err = contract.SubmitTransaction("createOi", "Cheguei otário", "Tô indo fdp", "Que cu", "MarianaArrombada")
 	if err != nil {
-		fmt.Printf("Failed to submit transaction: %s\n", err)
+		fmt.Printf("Falhou a SUBMIT (altera estado da ledger) transação: %s\n", err)
 		os.Exit(1)
 	}
 	fmt.Println(string(result))
 
-	result, err = contract.EvaluateTransaction("queryOi", "CAR10")
+	result, err = contract.EvaluateTransaction("queryOi", "OI6")
 	if err != nil {
-		fmt.Printf("Failed to evaluate transaction: %s\n", err)
+		fmt.Printf("Falhou a EVALUATE (consulta sem alterar estado da ledger) transação: %s\n", err)
 		os.Exit(1)
 	}
 	fmt.Println(string(result))
 
-	_, err = contract.SubmitTransaction("changeCarOwner", "CAR10", "Archie")
+	_, err = contract.SubmitTransaction("changeOiPessoa", "OI6", "Val Bandeira")
 	if err != nil {
-		fmt.Printf("Failed to submit transaction: %s\n", err)
+		fmt.Printf("Falhou a SUBMIT (altera estado da ledger) transação: %s\n", err)
 		os.Exit(1)
 	}
 
-	result, err = contract.EvaluateTransaction("queryCar", "CAR10")
+	result, err = contract.EvaluateTransaction("queryOi", "OI6")
 	if err != nil {
-		fmt.Printf("Failed to evaluate transaction: %s\n", err)
+		fmt.Printf("Falhou a EVALUATE (consulta sem alterar estado da ledger) transação: %s\n", err)
 		os.Exit(1)
 	}
 	fmt.Println(string(result))

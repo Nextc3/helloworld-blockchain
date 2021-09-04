@@ -65,10 +65,12 @@ func main() {
 
 	log.Println("--> Transação de Submit: InitLedger, function creates the initial set of assets on the ledger")
 	result, err := contract.SubmitTransaction("InitLedger")
-	if err != nil {
+	if err != nil { 
+		
 		log.Fatalf("Failed to Transação de Submit: %v", err)
 	}
 	log.Println(string(result))
+	
 
 	log.Println("--> Transação Evaluate: GetAllAssets, function returns all the current assets on the ledger")
 	result, err = contract.EvaluateTransaction("GetAllAssets")

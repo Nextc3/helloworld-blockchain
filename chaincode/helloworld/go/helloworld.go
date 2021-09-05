@@ -90,7 +90,7 @@ func (s *SmartContract) QueryOi(ctx contractapi.TransactionContextInterface, oiN
 	}
 
 	if oiAsBytes == nil {
-		return nil, fmt.Errorf("%s does not exist", oiNumber)
+		return nil, fmt.Errorf("%s não existe", oiNumber)
 	}
 
 	oi := new(Oi)
@@ -99,8 +99,31 @@ func (s *SmartContract) QueryOi(ctx contractapi.TransactionContextInterface, oiN
 	return oi, nil
 }
 
+//Consulta se Oi existe 
+func (s *SmartContract) ExisteOi(ctx contractapi.TransactionContextInterface, oiNumber string) (bool, error)  {
+	oiAsBytes, err := ctx.GetStub().GetState(oiNumber)
+	if err != nil {
+		return false, fmt.Errorf("falhou em ler o estado do bagulho: %v", err)
+	}
+
+	return oiAsBytes != nil, nil
+}
+
+func (s *SmartContract) DeleteOi(ctx contractapi.TransactionContextInterface, oiNumber string) error {
+	exists, err := s.ExisteOi(ctx, id)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return fmt.Errorf("o ativo %s não ecsiste", id)
+	}
+
+	return ctx.GetStub().DelState(oiNumber)
+
+}
+
 // QueryAllOis returns all Ois found in world state
-func (s *SmartContract) QueryAllOis(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
+func (s *SmartContract) QueryAllOis(ctx contractapi.TransactionContextInterface) ([]*QueryResult, error) {
 	startKey := ""
 	endKey := ""
 
@@ -111,7 +134,7 @@ func (s *SmartContract) QueryAllOis(ctx contractapi.TransactionContextInterface)
 	}
 	defer resultsIterator.Close()
 
-	results := []QueryResult{}
+	results := []*QueryResult{}
 
 	for resultsIterator.HasNext() {
 		queryResponse, err := resultsIterator.Next()
@@ -124,7 +147,7 @@ func (s *SmartContract) QueryAllOis(ctx contractapi.TransactionContextInterface)
 		_ = json.Unmarshal(queryResponse.Value, oi)
 
 		queryResult := QueryResult{Key: queryResponse.Key, Record: oi}
-		results = append(results, queryResult)
+		results = append(results, &queryResult)
 	}
 
 	return results, nil

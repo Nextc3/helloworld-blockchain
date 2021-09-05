@@ -18,22 +18,22 @@ import (
 )
 
 func main() {
-	log.Println("============ application-golang starts ============")
+	log.Println("============ minha primeira aplicação em golang ============")
 
 	err := os.Setenv("DISCOVERY_AS_LOCALHOST", "true")
 	if err != nil {
-		log.Fatalf("Error setting DISCOVERY_AS_LOCALHOST environemnt variable: %v", err)
+		log.Fatalf("Erro em setar DISCOVERY_AS_LOCALHOST como variável de ambiente: %v", err)
 	}
 
 	wallet, err := gateway.NewFileSystemWallet("wallet")
 	if err != nil {
-		log.Fatalf("Failed to create wallet: %v", err)
+		log.Fatalf("Falhou em criar wallet: %v", err)
 	}
 
 	if !wallet.Exists("appUser") {
 		err = populateWallet(wallet)
 		if err != nil {
-			log.Fatalf("Failed to populate wallet contents: %v", err)
+			log.Fatalf("Falhou em popular a wallet: %v", err)
 		}
 	}
 
@@ -52,67 +52,73 @@ func main() {
 		gateway.WithIdentity(wallet, "appUser"),
 	)
 	if err != nil {
-		log.Fatalf("Failed to connect to gateway: %v", err)
+		log.Fatalf("Falhou em conectar com o gateway: %v", err)
 	}
 	defer gw.Close()
 
 	network, err := gw.GetNetwork("mychannel")
 	if err != nil {
-		log.Fatalf("Failed to get network: %v", err)
+		log.Fatalf("Falhou em pegar a network: %v", err)
 	}
 
 	contract := network.GetContract("helloworld")
 
-	log.Println("--> Transação de Submit: InitLedger, function creates the initial set of assets on the ledger")
+	log.Println("--> Transação de Submit: InitLedger, função cria o conjunto inicial de ativos no razão")
 	result, err := contract.SubmitTransaction("InitLedger")
 	if err != nil { 
 		
-		log.Fatalf("Failed to Transação de Submit: %v", err)
+		log.Fatalf("Falhou em InitLedger SUBMIT (altera estado da ledger) %v", err)
 	}
 	log.Println(string(result))
 	
 
-	log.Println("--> Transação Evaluate: GetAllAssets, function returns all the current assets on the ledger")
-	result, err = contract.EvaluateTransaction("GetAllAssets")
+	log.Println("--> Transação Evaluate: QueryAllOis, função que retorna todos os ativos na ledger")
+	result, err = contract.EvaluateTransaction("QueryAllOis")
 	if err != nil {
-		log.Fatalf("Failed to Transação Evaluate: %v", err)
+		log.Fatalf("Falhou a EVALUATE (consulta sem alterar estado da ledger) transação: %v", err)
+	}
+	log.Println(string(result))
+	/*
+	Saudacao:  saudacao,
+	Despedida: despedida,
+	Oidenovo:  oidenovo,
+	Pessoa:	pessoa
+	*/
+
+	log.Println("--> Transação de Submit: CreateOi, cria ativos com ID(OINUMEROQUALQUER), saudação, despedida, oidenovo, e pessoa")
+	result, err = contract.SubmitTransaction("CreateOi", "OI11", "Cheguei otário", "Tô indo fdp", "Que cu", "MarianaArrombada")
+	if err != nil {
+		log.Fatalf("Falhou a SUBMIT (altera estado da ledger) transação: %v", err)
 	}
 	log.Println(string(result))
 
-	log.Println("--> Transação de Submit: CreateAsset, creates new asset with ID, color, owner, size, and appraisedValue arguments")
-	result, err = contract.SubmitTransaction("CreateAsset", "asset13", "yellow", "5", "Tom", "1300")
+	log.Println("--> Transação Evaluate: QueryOi, função retorna um ativo com OIID")
+	result, err = contract.EvaluateTransaction("QueryOi", "OI6")
 	if err != nil {
-		log.Fatalf("Failed to Transação de Submit: %v", err)
+		log.Fatalf("Falhou em Transação Evaluate: %v\n", err)
 	}
 	log.Println(string(result))
 
-	log.Println("--> Transação Evaluate: ReadAsset, function returns an asset with a given assetID")
-	result, err = contract.EvaluateTransaction("ReadAsset", "asset13")
+	log.Println("--> Transação Evaluate: ExisteOi, função que retorna um boleano se achou o ativo na ledger")
+	result, err = contract.EvaluateTransaction("ExisteOi", "OI1")
 	if err != nil {
-		log.Fatalf("Failed to Transação Evaluate: %v\n", err)
+		log.Fatalf("Falhou em ExisteOi Transação Evaluate: %v\n", err)
 	}
 	log.Println(string(result))
 
-	log.Println("--> Transação Evaluate: AssetExists, function returns 'true' if an asset with given assetID exist")
-	result, err = contract.EvaluateTransaction("AssetExists", "asset1")
+	log.Println("--> Transação de Submit: ChangeOiPessoa OI1, transfere para um novo dono Val Bandeira")
+	_, err = contract.SubmitTransaction("ChangeOiPessoa", "OI1", "Val Bandeira")
 	if err != nil {
-		log.Fatalf("Failed to Transação Evaluate: %v\n", err)
-	}
-	log.Println(string(result))
-
-	log.Println("--> Transação de Submit: TransferAsset asset1, transfer to new owner of Tom")
-	_, err = contract.SubmitTransaction("TransferAsset", "asset1", "Tom")
-	if err != nil {
-		log.Fatalf("Failed to Transação de Submit: %v", err)
+		log.Fatalf("Falhou em ChangeOiPessoa Transação de Submit: %v", err)
 	}
 
-	log.Println("--> Transação Evaluate: ReadAsset, function returns 'asset1' attributes")
-	result, err = contract.EvaluateTransaction("ReadAsset", "asset1")
+	log.Println("--> Transação Evaluate: QueryOi, function returns 'OI1' attributes(não sei pra que porra)")
+	result, err = contract.EvaluateTransaction("QueryOi", "OI1")
 	if err != nil {
-		log.Fatalf("Failed to Transação Evaluate: %v", err)
+		log.Fatalf("Falhou em QueryOi Transação Evaluate: %v", err)
 	}
 	log.Println(string(result))
-	log.Println("============ application-golang ends ============")
+	log.Println("============ fim da minha primeira aplicação em golang ============")
 }
 
 func populateWallet(wallet *gateway.Wallet) error {

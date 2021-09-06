@@ -65,12 +65,11 @@ func main() {
 
 	log.Println("--> Transação de Submit: InitLedger, função cria o conjunto inicial de ativos no razão")
 	result, err := contract.SubmitTransaction("InitLedger")
-	if err != nil { 
-		
+	if err != nil {
+
 		log.Fatalf("Falhou em InitLedger SUBMIT (altera estado da ledger) %v", err)
 	}
 	log.Println(string(result))
-	
 
 	log.Println("--> Transação Evaluate: QueryAllOis, função que retorna todos os ativos na ledger")
 	result, err = contract.EvaluateTransaction("QueryAllOis")
@@ -79,10 +78,10 @@ func main() {
 	}
 	log.Println(string(result))
 	/*
-	Saudacao:  saudacao,
-	Despedida: despedida,
-	Oidenovo:  oidenovo,
-	Pessoa:	pessoa
+		Saudacao:  saudacao,
+		Despedida: despedida,
+		Oidenovo:  oidenovo,
+		Pessoa:	pessoa
 	*/
 
 	log.Println("--> Transação de Submit: CreateOi, cria ativos com ID(OINUMEROQUALQUER), saudação, despedida, oidenovo, e pessoa")

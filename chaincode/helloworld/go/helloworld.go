@@ -99,8 +99,8 @@ func (s *SmartContract) QueryOi(ctx contractapi.TransactionContextInterface, oiN
 	return oi, nil
 }
 
-//Consulta se Oi existe 
-func (s *SmartContract) ExisteOi(ctx contractapi.TransactionContextInterface, oiNumber string) (bool, error)  {
+//Consulta se Oi existe
+func (s *SmartContract) ExisteOi(ctx contractapi.TransactionContextInterface, oiNumber string) (bool, error) {
 	oiAsBytes, err := ctx.GetStub().GetState(oiNumber)
 	if err != nil {
 		return false, fmt.Errorf("falhou em ler o estado do bagulho: %v", err)
@@ -110,12 +110,12 @@ func (s *SmartContract) ExisteOi(ctx contractapi.TransactionContextInterface, oi
 }
 
 func (s *SmartContract) DeleteOi(ctx contractapi.TransactionContextInterface, oiNumber string) error {
-	exists, err := s.ExisteOi(ctx, id)
+	exists, err := s.ExisteOi(ctx, oiNumber)
 	if err != nil {
 		return err
 	}
 	if !exists {
-		return fmt.Errorf("o ativo %s não ecsiste", id)
+		return fmt.Errorf("o ativo %s não ecsiste", oiNumber)
 	}
 
 	return ctx.GetStub().DelState(oiNumber)
